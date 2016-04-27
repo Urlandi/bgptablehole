@@ -140,7 +140,7 @@ for line in fileinput.input():
         else:
             for gapprefix, mask in subnets(cur_prefix[0] + ipaddrcount(cur_prefix[1]), prefix[0]):
                 print "{}/{}".format(numipv4(gapprefix), mask)
-            ipstack = []
+            ipstack[:] = []
             break
 
     ipstack.append(prefix)
