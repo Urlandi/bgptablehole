@@ -16,5 +16,11 @@ for line in fileinput.input():
 
     holes, netunion, ipstack[:] = getholes(prefix, ipstack)
 
+    for net in netunion:
+        print ("+{}/{}".format(numipv4(net[0]), net[1]))
+
     for hole in holes:
-        print ("{}/{}".format(numipv4(hole[0]), hole[1]))
+        print ("-{}/{}".format(numipv4(hole[0]), hole[1]))
+
+for net in ipstack:
+    print ("+{}/{}".format(numipv4(net[0]), net[1]))
