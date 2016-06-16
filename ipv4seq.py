@@ -57,7 +57,7 @@ def numipv4(address):
 
 def isseq((net_s), (net_e)):
     try:
-        if net_s > net_e:
+        if net_s[0] > net_e[0]:
             return False
 
         return net_s[0] + ipaddrcount(net_s[1]) == net_e[0]
@@ -91,7 +91,6 @@ def netsum((net_s), (net_e)):
     except TypeError:
         return 0, 0
 
-
 def subnets(addr_s, addr_e):
     _subnets = []
 
@@ -118,3 +117,13 @@ def subnets(addr_s, addr_e):
             cur_addr_s = cur_addr_s + ipaddrcount(i)
 
     return _subnets
+
+
+def netsub((net_s), (net_e)):
+
+    _netsub = []
+
+    if net_s[0] < net_e[0]:
+        _netsub = subnets(net_s[0],net_e[0]) + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
+
+    return _netsub + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
