@@ -57,7 +57,7 @@ def numipv4(address):
 
 def isseq((net_s), (net_e)):
     try:
-        if net_s[0] > net_e[0]:
+        if net_s > net_e:
             return False
 
         return net_s[0] + ipaddrcount(net_s[1]) == net_e[0]
