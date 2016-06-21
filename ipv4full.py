@@ -21,25 +21,36 @@ for line in fileinput.input():
 
     prefixes = [prefix]
 
-    prefix_spec = ipv4num(PREFIX_SPEC[prefix_spec_i])
+    prefix_spec = PREFIX_SPEC[prefix_spec_i]
 
     while prefix > prefix_spec and not issubnet(prefix_spec, prefix):
+        prefixes.insert(-1, prefix_spec)
         prefix_spec_i += 1
-        prefix_spec = ipv4num(PREFIX_SPEC[prefix_spec_i])
+        prefix_spec = PREFIX_SPEC[prefix_spec_i]
 
     if issubnet(prefix, prefix_spec):
-        prefixes = netsub(prefix, prefix_spec)
+        prefixes[-1:] = netsub(prefix, prefix_spec)
     elif issubnet(prefix_spec, prefix):
-        continue
+        prefixes[-1:] = [prefix_spec]
 
     for cur_prefix in prefixes:
+
         holes, netunion, ipstack[:] = getholes(cur_prefix, ipstack)
 
         for net in netunion:
-            print ("+{}/{}".format(numipv4(net[0]), net[1]))
+            sids = '+'
+            if net in PREFIX_SPEC:
+                sids = '*'
+            print ("{}{}/{}".format(sids, numipv4(net[0]), net[1]))
 
         for hole in holes:
-            print ("-{}/{}".format(numipv4(hole[0]), hole[1]))
+            sids = '-'
+            if hole in PREFIX_SPEC:
+                sids = '*'
+            print ("{}{}/{}".format(sids,numipv4(hole[0]), hole[1]))
 
 for net in ipstack:
-    print ("+{}/{}".format(numipv4(net[0]), net[1]))
+    sids = '+'
+    if net in PREFIX_SPEC:
+        sids = '*'
+    print ("{}{}/{}".format(sids, numipv4(net[0]), net[1]))

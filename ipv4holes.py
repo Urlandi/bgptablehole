@@ -1,4 +1,5 @@
 from ipv4seq import *
+from prefixin import PREFIX_SPEC
 
 
 def getholes(prefix, (ipstack)):
@@ -9,7 +10,7 @@ def getholes(prefix, (ipstack)):
     while len(ipstack):
         cur_prefix = ipstack.pop()
         sum_prefix = netsum(cur_prefix, prefix)
-        if sum_prefix[0]:
+        if (sum_prefix[0]) and (prefix not in PREFIX_SPEC) and (cur_prefix not in PREFIX_SPEC):
             prefix = sum_prefix
             continue
         elif issubnet(cur_prefix, prefix):

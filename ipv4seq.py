@@ -121,9 +121,9 @@ def subnets(addr_s, addr_e):
 
 def netsub((net_s), (net_e)):
 
-    _netsub = []
-
     if net_s[0] < net_e[0]:
-        _netsub = subnets(net_s[0],net_e[0]) + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
+        _netsub = subnets(net_s[0], net_e[0]) + [net_e] + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
+    else:
+        _netsub = [net_e] + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
 
-    return _netsub + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
+    return _netsub
