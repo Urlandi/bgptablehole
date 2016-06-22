@@ -1,6 +1,6 @@
 import fileinput
 
-from ipv4holes import getholes, numipv4, issubnet, netsub
+from ipv4holes import getholes, numipv4
 from prefixin import *
 
 ipstack = []
@@ -20,43 +20,37 @@ try:
         if prefix[1] > PREFIX_MAX:
             continue
 
-        prefixes = [prefix]
+        holes, netunion, ipstack[:] = getholes(prefix, ipstack)
 
-        prefix_spec = PREFIX_SPEC[prefix_spec_i]
-
-        while prefix > prefix_spec and not issubnet(prefix_spec, prefix):
-            prefixes.insert(-1, prefix_spec)
-            prefix_spec_i += 1
-            prefix_spec = PREFIX_SPEC[prefix_spec_i]
-
-        if issubnet(prefix, prefix_spec):
-            prefixes[-1:] = netsub(prefix, prefix_spec)
-        elif issubnet(prefix_spec, prefix):
-            prefixes[-1:] = [prefix_spec]
-
-        for cur_prefix in prefixes:
-
-            holes, netunion, ipstack[:] = getholes(cur_prefix, ipstack)
-
-            for net in netunion:
-                sids = '+'
-                if net in PREFIX_SPEC:
+        for net in netunion:
+            prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
+            for p in prefixes:
+                if p in PREFIX_SPEC:
                     sids = '*'
-                print ("{}{}/{}".format(sids, numipv4(net[0]), net[1]))
+                else:
+                    sids = '+'
+                print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
 
-            for hole in holes:
-                sids = '-'
-                if hole in PREFIX_SPEC:
+        for net in holes:
+            prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
+            for p in prefixes:
+                if p in PREFIX_SPEC:
                     sids = '*'
-                print ("{}{}/{}".format(sids,numipv4(hole[0]), hole[1]))
+                else:
+                    sids = '-'
+                print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
+
 
 except IOError, ValueError:
     print ("Input read error.")
 finally:
     fileinput.close()
 
-for net in ipstack:
-    sids = '+'
-    if net in PREFIX_SPEC:
-        sids = '*'
-    print ("{}{}/{}".format(sids, numipv4(net[0]), net[1]))
+#for net in ipstack:
+#    prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
+#    for p in prefixes:
+#        if p in PREFIX_SPEC:
+#            sids = '*'
+#        else:
+#            sids = '+'
+#        print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
