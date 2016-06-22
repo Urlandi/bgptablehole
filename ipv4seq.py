@@ -18,11 +18,11 @@ def ipv4num(address):
     octets = addr.split('.')
 
     try:
-        preflen,asn = prefas.split(',', 1)
+        preflen, aspath = prefas.split(',', 1)
 
     except ValueError:
         preflen = prefas
-        asn = 0
+        aspath = 0
 
     try:
         i = 0
@@ -38,14 +38,10 @@ def ipv4num(address):
 
         addrnet &= addrmask
 
-        asnum = int(asn)
-        if ASN_MAX < asnum < 1:
-            asnum = 0
-
     except ValueError:
         return 0
 
-    return addrnet, prefn, asnum
+    return addrnet, prefn, aspath
 
 
 def numipv4(address):
@@ -121,9 +117,11 @@ def subnets(addr_s, addr_e):
 
 def netsub((net_s), (net_e)):
 
+    _netsub = []
+
     if net_s[0] < net_e[0]:
-        _netsub = subnets(net_s[0], net_e[0]) + [net_e] + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
-    else:
-        _netsub = [net_e] + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
+        _netsub = subnets(net_s[0], net_e[0])
+
+    _netsub = _netsub + [net_e] + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
 
     return _netsub
