@@ -1,6 +1,7 @@
 ADDR_LEN = 32
 ASN_MAX = 18446744073709551616L
 
+
 def ipaddrcount(masklen):
     return 1 << (ADDR_LEN - masklen)
 

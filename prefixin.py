@@ -1,4 +1,4 @@
-from ipv4seq import subnets, ipaddrcount, ipv4num, issubnet, numipv4
+from ipv4seq import subnets, ipaddrcount, ipv4num, issubnet
 
 PREFIX_MAX = 24
 PREFIX_SPEC = (ipv4num("0.0.0.0/8"),
