@@ -12,13 +12,15 @@ Get IPv4 prefixes from a list
 Usage:
     ipv4full.py [-a|l|s] [-p] [-n] [-d] <file>
 
-Options (asn is mandatory option):
+Options:
     -a|--all        Show prefixes, holes and special (default, prefer)
     -l|--hole       Only holes
     -s|--summary    Only summary of prefixes
     -p|--special    Without special
     -n|--as_path    Show AS_PATH
     -d|--prepend    Without prepend +|-|*, only with -l or -s
+
+Input file format is A.B.C.D/X,PATH in each line
 """
 
 
