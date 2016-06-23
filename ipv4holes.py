@@ -10,13 +10,13 @@ def getholes(prefix, (ipstack)):
     while len(ipstack):
         cur_prefix = ipstack.pop()
         sum_prefix = netsum(cur_prefix, prefix)
-        if sum_prefix[0]:
+        if sum_prefix[0] and prefix[2] == cur_prefix[2] == 0:
             prefix = sum_prefix
             continue
-        elif issubnet(cur_prefix, prefix):
+        elif issubnet(cur_prefix, prefix) and prefix[2] == cur_prefix[2]:
             prefix = cur_prefix
             break
-        elif isseq(cur_prefix, prefix):
+        elif isseq(cur_prefix, prefix) and prefix[2] == cur_prefix[2] == 0:
             if prefix[1] <= cur_prefix[1]:
                 netunion.extend(ipstack)
                 netunion.append(cur_prefix)

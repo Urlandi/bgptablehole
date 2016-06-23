@@ -32,7 +32,7 @@ try:
                     sids = '*'
                 else:
                     sids = '+'
-                print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
+                print ("{}{}/{}:{}".format(sids, numipv4(p[0]), p[1], p[2]))
 
         for net in holes:
             prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
@@ -41,7 +41,7 @@ try:
                     sids = '*'
                 else:
                     sids = '-'
-                print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
+                print ("{}{}/{}:{}".format(sids, numipv4(p[0]), p[1], p[2]))
 
 
 except IOError, ValueError:
@@ -56,4 +56,4 @@ for net in ipstack:
             sids = '*'
         else:
             sids = '+'
-        print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
+        print ("{}{}/{}:{}".format(sids, numipv4(p[0]), p[1], p[2]))

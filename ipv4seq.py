@@ -88,7 +88,7 @@ def netsum((net_s), (net_e)):
         return 0, 0
 
 
-def subnets(addr_s, addr_e):
+def subnets(addr_s, addr_e, aspath=0):
     _subnets = []
 
     def prefix_l(s, e):
@@ -110,7 +110,7 @@ def subnets(addr_s, addr_e):
 
         while cur_addr_s < addr_e:
             i = prefix_l(cur_addr_s, addr_e)
-            _subnets.append([cur_addr_s, i])
+            _subnets.append([cur_addr_s, i, aspath])
             cur_addr_s = cur_addr_s + ipaddrcount(i)
 
     return _subnets
