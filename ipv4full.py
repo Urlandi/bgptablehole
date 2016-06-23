@@ -10,7 +10,7 @@ Get IPv4 prefixes from a list
 (c) POWERNET ISP 2016
 
 Usage:
-    ipv4full.py [-a|l|s] [-p] [-n] [-d] [<file>]
+    ipv4full.py [-a|l|s] [-p] [-n] [-d] <file>
 
 Options (asn is mandatory option):
     -a|--all        Show prefixes, holes and special (default, prefer)
