@@ -20,6 +20,9 @@ try:
         if prefix[1] > PREFIX_MAX:
             continue
 
+        if issubnet(PREFIX_SPEC[prefix_spec_i], prefix):
+            prefix = PREFIX_SPEC[prefix_spec_i]
+
         holes, netunion, ipstack[:] = getholes(prefix, ipstack)
 
         for net in netunion:
@@ -46,11 +49,11 @@ except IOError, ValueError:
 finally:
     fileinput.close()
 
-#for net in ipstack:
-#    prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
-#    for p in prefixes:
-#        if p in PREFIX_SPEC:
-#            sids = '*'
-#        else:
-#            sids = '+'
-#        print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
+for net in ipstack:
+    prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
+    for p in prefixes:
+        if p in PREFIX_SPEC:
+            sids = '*'
+        else:
+            sids = '+'
+        print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))

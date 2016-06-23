@@ -20,14 +20,20 @@ PREFIX_SPEC = (ipv4num("0.0.0.0/8"),
                ipv4num("224.0.0.0/3"),)
 
 
-def netsub((net_s), (net_e)):
+def netsub((net_s), (net_list)):
 
     _netsub = []
 
-    if net_s[0] < net_e[0]:
-        _netsub = subnets(net_s[0], net_e[0])
+    if net_s[0] < net_list[0][0]:
+        _netsub = subnets(net_s[0], net_list[0][0])
 
-    _netsub = _netsub + [net_e] + subnets(net_e[0]+ipaddrcount(net_e[1]), net_s[0]+ipaddrcount(net_s[1]))
+    i = 0
+    while i < len(net_list)-1:
+        _netsub = _netsub + [net_list[i]] + subnets(net_list[i][0]+ipaddrcount(net_list[i][1]), net_list[i+1][0])
+        i += 1
+
+    _netsub = _netsub + [net_list[-1]] + subnets(net_list[-1][0] + ipaddrcount(net_list[-1][1]),
+                                                 net_s[0] + ipaddrcount(net_s[1]))
 
     return _netsub
 
@@ -38,19 +44,24 @@ def prefix_spec(prefix, i):
 
     if prefix != PREFIX_SPEC[i]:
 
-        while i < len(PREFIX_SPEC) and prefix[0] >= PREFIX_SPEC[i][0]:
-            prefixes.append(PREFIX_SPEC[i])
+        while i < len(PREFIX_SPEC) and prefix[0] > PREFIX_SPEC[i][0]:
+            if not issubnet(PREFIX_SPEC[i], prefix):
+                i += 1
+            else:
+                break
+
+        if issubnet(prefix, PREFIX_SPEC[i]):
+            prefix_sub = [PREFIX_SPEC[i]]
             i += 1
+            while i < len(PREFIX_SPEC) and issubnet(prefix, PREFIX_SPEC[i]):
+                prefix_sub.append(PREFIX_SPEC[i])
+                i += 1
 
-        if issubnet(PREFIX_SPEC[i], prefix):
-            prefixes.append(PREFIX_SPEC[i])
+            prefixes = prefixes + netsub(prefix, prefix_sub)
 
-        elif issubnet(prefix, PREFIX_SPEC[i]):
-            prefixes = prefixes + netsub(prefix, PREFIX_SPEC[i])
-            i += 1
-
-        else:
+        elif not issubnet(PREFIX_SPEC[i], prefix):
             prefixes.append(prefix)
+
     else:
         prefixes = [prefix]
         i += 1
