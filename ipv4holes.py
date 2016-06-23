@@ -26,8 +26,8 @@ def getholes(prefix, (ipstack)):
                 ipstack.append(cur_prefix)
                 break
         else:
-            for gapprefix, mask in subnets(cur_prefix[0] + ipaddrcount(cur_prefix[1]), prefix[0]):
-                holes.append((gapprefix, mask))
+            for gapprefix, mask, aspath in subnets(cur_prefix[0] + ipaddrcount(cur_prefix[1]), prefix[0]):
+                holes.append((gapprefix, mask, aspath))
             netunion.extend(ipstack)
             netunion.append(cur_prefix)
             ipstack[:] = []
