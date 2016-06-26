@@ -60,7 +60,9 @@ def prefix_spec(prefix, i):
 
             prefixes = prefixes + netsub(prefix, prefix_sub)
 
-        elif not issubnet(PREFIX_SPEC[i], prefix):
+        elif issubnet(PREFIX_SPEC[i], prefix):
+            prefixes = [PREFIX_SPEC[i]]
+        else:
             prefixes.append(prefix)
 
     else:

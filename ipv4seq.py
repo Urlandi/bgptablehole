@@ -13,10 +13,12 @@ def ipmask(masklen):
 def ipv4num(address):
 
     addrnet = 0
-    addrmask = (1 << ADDR_LEN) - 1
 
-    addr, prefas = address.split('/')
-    octets = addr.split('.')
+    try:
+        addr, prefas = address.split('/')
+        octets = addr.split('.')
+    except ValueError:
+        return 0
 
     try:
         preflen, aspath = prefas.split(',', 1)
@@ -36,6 +38,8 @@ def ipv4num(address):
         prefn = int(preflen)
         if 1 <= prefn <= ADDR_LEN:
             addrmask = ipmask(prefn)
+        else:
+            return 0
 
         addrnet &= addrmask
 
@@ -52,9 +56,23 @@ def numipv4(address):
         return 0
 
 
+def isiple((net_s), (net_e)): #net_s < net_e
+    if net_s[0] < net_e[0] or ( net_s[0] == net_e[0] and net_s[1] < net_e[1]):
+        return True
+    else:
+        return False
+
+
+def isipleq((net_s), (net_e)): #net_s <= net_e
+    if net_s[0] < net_e[0] or ( net_s[0] == net_e[0] and net_s[1] <= net_e[1]):
+        return True
+    else:
+        return False
+
+
 def isseq((net_s), (net_e)):
     try:
-        if net_s > net_e:
+        if isipleq(net_e, net_s):
             return False
 
         return net_s[0] + ipaddrcount(net_s[1]) == net_e[0]
@@ -65,7 +83,7 @@ def isseq((net_s), (net_e)):
 
 def issubnet((net_s), (net_e)):
     try:
-        if net_s > net_e:
+        if isipleq(net_e, net_s):
             return False
 
         return net_s[0] + ipaddrcount(net_s[1]) > net_e[0]
@@ -76,7 +94,7 @@ def issubnet((net_s), (net_e)):
 
 def netsum((net_s), (net_e)):
     try:
-        if net_s > net_e:
+        if isipleq(net_e, net_s):
             return 0, 0
 
         if ((net_s[1] == net_e[1]) and (net_s[1] > 1) and
