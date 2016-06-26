@@ -15,7 +15,7 @@ Options:
 
 Returned summary of prefixes by AS_PATH (if exists) and holes between it.
 
-Input file format is A.B.C.D/X,PATH in each line. PATH and comma with it maybe not present
+Input file format is A.B.C.D/X,PATH in each line sorted by ascending. PATH and comma with it maybe not present
 
 #### Source data
 
