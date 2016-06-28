@@ -2,6 +2,7 @@ import sys
 import fileinput
 import getopt
 
+from ipv4seq import numipv4
 from ipv4holes import getholes
 from prefixin import *
 
