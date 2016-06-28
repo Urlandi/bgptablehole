@@ -1,4 +1,4 @@
-from ipv4seq import subnets, ipaddrcount, ipv4num, issubnet
+from ipv4seq import ipv4num, issubnet, netsub, numipv4
 
 PREFIX_MAX = 24
 PREFIX_SPEC = (ipv4num("0.0.0.0/8"),
@@ -18,26 +18,6 @@ PREFIX_SPEC = (ipv4num("0.0.0.0/8"),
                ipv4num("198.51.100.0/24"),
                ipv4num("203.0.113.0/24"),
                ipv4num("224.0.0.0/3"),)
-
-
-def netsub((net_s), (net_list)):
-
-    _netsub = []
-
-    if net_s[0] < net_list[0][0]:
-        _netsub = subnets(net_s[0], net_list[0][0], net_s[2])
-
-    i = 0
-    while i < len(net_list)-1:
-        _netsub = _netsub + [net_list[i]] + \
-                  subnets(net_list[i][0]+ipaddrcount(net_list[i][1]), net_list[i+1][0], net_s[2])
-        i += 1
-
-    _netsub = _netsub + [net_list[-1]] + \
-              subnets(net_list[-1][0] + ipaddrcount(net_list[-1][1]), net_s[0] + ipaddrcount(net_s[1]), net_s[2])
-
-    return _netsub
-
 
 def prefix_spec(prefix, i):
 
@@ -67,6 +47,14 @@ def prefix_spec(prefix, i):
 
     else:
         prefixes = [prefix]
-        i += 1
 
     return prefixes, i
+
+def isprefix_spec(prefix):
+
+    if prefix not in PREFIX_SPEC:
+        for prefix_spec in PREFIX_SPEC:
+            if issubnet(prefix_spec, prefix):
+                return prefix_spec
+
+    return prefix

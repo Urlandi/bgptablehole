@@ -2,7 +2,7 @@ import sys
 import fileinput
 import getopt
 
-from ipv4holes import getholes, numipv4
+from ipv4holes import getholes
 from prefixin import *
 
 USAGE_MSG = """
@@ -23,11 +23,11 @@ Options:
 Input file format is A.B.C.D/X,PATH in each line
 """
 
+
 def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, opt_aspath=False, opt_prepend=False):
 
     ipstack = []
     prefix_spec_i = 0
-    prefix_spec_c = 0
 
     opt_list = "alspd"
     lopt_list = ("all", "hole", "summary", "special", "aspath", "prepend")
@@ -35,6 +35,26 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
     input_flow_name = "-"
 
     err_id = 0
+
+    def prefix_out((netunion), lp, i, opt_special=False, opt_prepend=False, opt_aspath=False):
+        for net in netunion:
+            prefixes, i = prefix_spec(net, i)
+            for p in prefixes:
+                if p in PREFIX_SPEC:
+                    if not opt_special:
+                        sids = '*'
+                    else:
+                        continue
+                else:
+                    sids = lp
+
+                if opt_prepend:
+                    sids = ""
+
+                print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", " + p[2] if opt_aspath else ""))
+
+        return i
+
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], opt_list, lopt_list)
@@ -74,46 +94,17 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
             if prefix[1] > PREFIX_MAX:
                 continue
 
-            if issubnet(PREFIX_SPEC[prefix_spec_i], prefix):
-                prefix = PREFIX_SPEC[prefix_spec_i]
+            prefix = isprefix_spec(prefix)
 
             holes, netunion, ipstack[:] = getholes(prefix, ipstack)
 
             if opt_summary or opt_all:
-                for net in netunion:
-                    prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
-                    for p in prefixes:
-                        if p in PREFIX_SPEC:
-                            if not opt_special and prefix_spec_c != prefix_spec_i:
-                                prefix_spec_c = prefix_spec_i
-                                sids = '*'
-                            else:
-                                continue
-                        else:
-                            sids = '+'
-
-                        if opt_prepend:
-                            sids = ""
-
-                        print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", "+p[2] if opt_aspath else ""))
+                prefix_spec_i = prefix_out(netunion,"+",prefix_spec_i,
+                                                          opt_special, opt_prepend, opt_aspath)
 
             if opt_hole or opt_all:
-                for net in holes:
-                    prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
-                    for p in prefixes:
-                        if p in PREFIX_SPEC:
-                            if not opt_special and prefix_spec_c != prefix_spec_i:
-                                prefix_spec_c = prefix_spec_i
-                                sids = '*'
-                            else:
-                                continue
-                        else:
-                            sids = '-'
-
-                        if opt_prepend:
-                            sids = ""
-
-                        print ("{}{}/{}".format(sids, numipv4(p[0]), p[1]))
+                prefix_spec_i = prefix_out(holes, "-", prefix_spec_i,
+                                                          opt_special, opt_prepend, opt_aspath)
 
     except IOError:
         print ("Input read error in '{}'".format(input_flow_name))
@@ -125,24 +116,8 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
         fileinput.close()
 
     if not err_id:
-
         if opt_summary or opt_all:
-            for net in ipstack:
-                prefixes, prefix_spec_i = prefix_spec(net, prefix_spec_i)
-                for p in prefixes:
-                    if p in PREFIX_SPEC:
-                        if not opt_special and prefix_spec_c != prefix_spec_i:
-                            prefix_spec_c = prefix_spec_i
-                            sids = '*'
-                        else:
-                            continue
-                    else:
-                        sids = '+'
-
-                    if opt_prepend:
-                        sids = ""
-
-                    print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", "+p[2] if opt_aspath else ""))
+            prefix_out(ipstack, "+", prefix_spec_i, opt_special, opt_prepend, opt_aspath)
     else:
         exit(err_id)
 

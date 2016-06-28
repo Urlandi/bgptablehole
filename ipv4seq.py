@@ -83,7 +83,7 @@ def isseq((net_s), (net_e)):
 
 def issubnet((net_s), (net_e)):
     try:
-        if isipleq(net_e, net_s):
+        if isiple(net_e, net_s):
             return False
 
         return net_s[0] + ipaddrcount(net_s[1]) > net_e[0]
@@ -133,3 +133,21 @@ def subnets(addr_s, addr_e, aspath=0):
             cur_addr_s = cur_addr_s + ipaddrcount(i)
 
     return _subnets
+
+def netsub((net_s), (net_list)):
+
+    _netsub = []
+
+    if net_s[0] < net_list[0][0]:
+        _netsub = subnets(net_s[0], net_list[0][0], net_s[2])
+
+    i = 0
+    while i < len(net_list)-1:
+        _netsub = _netsub + [net_list[i]] + \
+                  subnets(net_list[i][0]+ipaddrcount(net_list[i][1]), net_list[i+1][0], net_s[2])
+        i += 1
+
+    _netsub = _netsub + [net_list[-1]] + \
+              subnets(net_list[-1][0] + ipaddrcount(net_list[-1][1]), net_s[0] + ipaddrcount(net_s[1]), net_s[2])
+
+    return _netsub
