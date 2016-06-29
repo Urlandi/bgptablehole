@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Work with special prefixes
+"""
+
 from ipv4seq import ipv4num, issubnet, netsub
 
 PREFIX_MAX = 24
@@ -21,7 +26,9 @@ PREFIX_SPEC = (ipv4num("0.0.0.0/8"),
                ipv4num("203.0.113.0/24"),
                ipv4num("224.0.0.0/3"),)
 
+
 def prefix_spec(prefix, i):
+    """Return list of prefixes from arg1 where PREFIX_SPEC present visibly"""
 
     prefixes = []
 
@@ -53,7 +60,8 @@ def prefix_spec(prefix, i):
     return prefixes, i
 
 
-def inprefix_spec(prefix, slice):
+def inprefix_spec(prefix, slice=0):
+    """True if arg1 in PREFIX_SPEC"""
 
     for prefix_spec in PREFIX_SPEC[slice:]:
         if prefix[0] < prefix_spec[0]:

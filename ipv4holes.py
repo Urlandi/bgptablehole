@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Prefix processing procedures
+"""
+
 from ipv4seq import *
 
 

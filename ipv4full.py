@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Generate prefix list from file
+"""
+
 import sys
 import fileinput
 import getopt
@@ -37,22 +42,22 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
 
     err_id = 0
 
-    def prefix_out((netunion), lp, i, opt_special=False, opt_prepend=False, opt_aspath=False):
-        for net in netunion:
+    def prefix_out((netin), lp, i, opt_s=False, opt_p=False, opt_a=False):
+        for net in netin:
             prefixes, i = prefix_spec(net, i)
             for p in prefixes:
                 if p in PREFIX_SPEC:
-                    if not opt_special:
+                    if not opt_s:
                         sids = '*'
                     else:
                         continue
                 else:
                     sids = lp
 
-                if opt_prepend:
+                if opt_p:
                     sids = ""
 
-                print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", " + p[2] if opt_aspath else ""))
+                print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", " + p[2] if opt_a else ""))
 
         return i
 
@@ -80,6 +85,7 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
         if len(args) > 0:
             input_flow_name = args[-1]
 
+        # Main cycle
         for line in fileinput.input(input_flow_name):
 
             rline = line.rstrip()
@@ -91,32 +97,36 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
                 err_id = 1
                 break
 
+            # Filter too long mask
             if prefix[1] > PREFIX_MAX:
                 continue
 
             prefix = inprefix_spec(prefix, prefix_spec_i)
 
+            # Main executes
             holes, netunion, ipstack[:] = getholes(prefix, ipstack)
 
+            # Print output
             if opt_summary or opt_all:
-                prefix_spec_i = prefix_out(netunion,"+",prefix_spec_i,
-                                                          opt_special, opt_prepend, opt_aspath)
+                prefix_spec_i = prefix_out(netunion, "+", prefix_spec_i, opt_special, opt_prepend, opt_aspath)
 
             if opt_hole or opt_all:
-                prefix_spec_i = prefix_out(holes, "-", prefix_spec_i,
-                                                          opt_special, opt_prepend, opt_aspath)
+                prefix_spec_i = prefix_out(holes, "-", prefix_spec_i, opt_special, opt_prepend, opt_aspath)
 
     except IOError:
         print ("Input read error in '{}'".format(input_flow_name))
         err_id = 2
+
     except getopt.GetoptError:
         print (USAGE_MSG)
         err_id = 3
+
     finally:
         fileinput.close()
 
     if not err_id:
         if opt_summary or opt_all:
+            # After execute print
             prefix_out(ipstack, "+", prefix_spec_i, opt_special, opt_prepend, opt_aspath)
     else:
         exit(err_id)

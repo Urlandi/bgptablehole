@@ -95,8 +95,6 @@ def numipv4(address):
     except ValueError:
         return 0
 
-    return 0
-
 
 def isiple((net_s), (net_e)):
     """
@@ -264,10 +262,10 @@ def netsub((net_s), (net_list)):
     i = 0
     while i < len(net_list)-1:
         _netsub = _netsub + [net_list[i]] + \
-                  subnets(net_list[i][0]+ipaddrcount(net_list[i][1]), net_list[i+1][0], net_s[2])
+                    subnets(net_list[i][0]+ipaddrcount(net_list[i][1]), net_list[i+1][0], net_s[2])
         i += 1
 
     _netsub = _netsub + [net_list[-1]] + \
-              subnets(net_list[-1][0] + ipaddrcount(net_list[-1][1]), net_s[0] + ipaddrcount(net_s[1]), net_s[2])
+                subnets(net_list[-1][0] + ipaddrcount(net_list[-1][1]), net_s[0] + ipaddrcount(net_s[1]), net_s[2])
 
     return _netsub
