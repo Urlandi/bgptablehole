@@ -50,11 +50,13 @@ def prefix_spec(prefix, i):
 
     return prefixes, i
 
-def isprefix_spec(prefix):
 
-    if prefix not in PREFIX_SPEC:
-        for prefix_spec in PREFIX_SPEC:
-            if issubnet(prefix_spec, prefix):
-                return prefix_spec
+def inprefix_spec(prefix, slice):
+
+    for prefix_spec in PREFIX_SPEC[slice:]:
+        if prefix[0] < prefix_spec[0]:
+            break
+        elif issubnet(prefix_spec, prefix):
+            return prefix_spec
 
     return prefix

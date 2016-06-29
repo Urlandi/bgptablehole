@@ -95,7 +95,7 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
             if prefix[1] > PREFIX_MAX:
                 continue
 
-            prefix = isprefix_spec(prefix)
+            prefix = inprefix_spec(prefix, prefix_spec_i)
 
             holes, netunion, ipstack[:] = getholes(prefix, ipstack)
 
