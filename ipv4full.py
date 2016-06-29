@@ -56,7 +56,6 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
 
         return i
 
-
     try:
         opts, args = getopt.getopt(sys.argv[1:], opt_list, lopt_list)
 
