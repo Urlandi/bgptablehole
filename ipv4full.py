@@ -88,11 +88,11 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
         # Main cycle
         for line in fileinput.input(input_flow_name):
 
-            rline = line.rstrip()
+            rline = line.strip()
 
             prefix = ipv4num(rline)
 
-            if not prefix:
+            if not len(prefix):
                 print "Invalid prefix '{}'".format(rline)
                 err_id = 1
                 break

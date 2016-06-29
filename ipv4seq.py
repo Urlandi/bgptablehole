@@ -36,45 +36,44 @@ def ipv4num(address):
     1. digitized mask length
     2. as is "ASPATH" or 0 if absent
 
-    or 0 if errors occur
+    or empty list if errors occur
 
     Some exceptions handled
     """
 
-    addrnet = 0
+    _r = []
 
     try:
-        addr, prefas = address.split('/')
-        octets = addr.split('.')
-    except ValueError:
-        return 0
+        addr = address.split('.', 3)
+        addr = addr[:3] + addr[3].split('/', 1)
+        addr = addr[:4] + addr[4].split(',', 1)
 
-    try:
-        preflen, aspath = prefas.split(',', 1)
-    except ValueError:
-        preflen = prefas
-        aspath = 0
+        octets = addr[:4]
+        preflen = addr[4]
+        aspath = "".join(addr[5:]).strip()
 
-    try:
-        i = 0
-        for octet in reversed(octets):
-            octetnum = int(octet)
-            if 0 <= octetnum <= 255:
-                addrnet += octetnum * (1 << i)
-                i += 8
+        if aspath == "":
+            aspath = 0
 
-        prefn = int(preflen)
-        if 1 <= prefn <= ADDR_LEN:
-            addrmask = ipmask(prefn)
-        else:
-            return 0
+        o0 = int(octets[3])
+        o1 = int(octets[2])
+        o2 = int(octets[1])
+        o3 = int(octets[0])
 
-        addrnet &= addrmask
+        if 0 <= o3 <= 255 and 0 <= o2 <= 255 and 0 <= o1 <= 255 and 0 <= o0 <= 255:
+            addrnet = o3*16777216+o2*65536+o1*256+o0
 
-    except ValueError:
-        return 0
+            prefn = int(preflen)
+            if 1 <= prefn <= ADDR_LEN:
+                addrmask = ipmask(prefn)
+                addrnet &= addrmask
 
-    return addrnet, prefn, aspath
+                _r = addrnet, prefn, aspath
+
+    except (ValueError, IndexError):
+        return _r
+
+    return _r
 
 
 def numipv4(address):
