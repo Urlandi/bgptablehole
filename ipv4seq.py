@@ -91,8 +91,11 @@ def numipv4(address):
 
     try:
         return "{}.{}.{}.{}".format(address >> 24, (address >> 16) & 0xff, (address >> 8) & 0xff, (address & 0xff))
+
     except ValueError:
         return 0
+
+    return 0
 
 
 def isiple((net_s), (net_e)):
@@ -110,8 +113,8 @@ def isiple((net_s), (net_e)):
 
     if net_s[0] < net_e[0] or (net_s[0] == net_e[0] and net_s[1] < net_e[1]):
         return True
-    else:
-        return False
+
+    return False
 
 
 def isipleq((net_s), (net_e)):
@@ -129,8 +132,8 @@ def isipleq((net_s), (net_e)):
 
     if net_s[0] < net_e[0] or (net_s[0] == net_e[0] and net_s[1] <= net_e[1]):
         return True
-    else:
-        return False
+
+    return False
 
 
 def isseq((net_s), (net_e)):
@@ -144,13 +147,13 @@ def isseq((net_s), (net_e)):
     """
 
     try:
-        if isipleq(net_e, net_s):
-            return False
-
-        return net_s[0] + ipaddrcount(net_s[1]) == net_e[0]
+        if isiple(net_s, net_e):
+            return net_s[0] + ipaddrcount(net_s[1]) == net_e[0]
 
     except TypeError:
         return False
+
+    return False
 
 
 def issubnet((net_s), (net_e)):
@@ -165,13 +168,13 @@ def issubnet((net_s), (net_e)):
     """
 
     try:
-        if isiple(net_e, net_s):
-            return False
-
-        return net_s[0] + ipaddrcount(net_s[1]) > net_e[0]
+        if isipleq(net_s, net_e):
+            return net_s[0] + ipaddrcount(net_s[1]) > net_e[0]
 
     except TypeError:
         return False
+
+    return False
 
 
 def netsum((net_s), (net_e)):
@@ -185,21 +188,23 @@ def netsum((net_s), (net_e)):
     Return 192.0.2.0/29 if:
     arg1:192.0.2.0/30, arg2:192.0.2.4/30
 
-    Return (0, 0) when unable to sum
+    Return empty list when unable to sum
     """
 
-    try:
-        if isipleq(net_e, net_s):
-            return 0, 0
+    _netsum = []
 
-        if ((net_s[1] == net_e[1]) and (net_s[1] > 1) and
-                (net_s[0] & ipmask(net_s[1] - 1) == (net_s[0])) and isseq(net_s, net_e)):
-            return net_s[0], net_s[1] - 1
-        else:
-            return 0, 0
+    try:
+        if isiple(net_s, net_e):
+            if (net_s[1] == net_e[1]) and \
+                    (net_s[1] > 1) and \
+                    (net_s[0] & ipmask(net_s[1] - 1) == (net_s[0])) and \
+                    isseq(net_s, net_e):
+                _netsum = [net_s[0], net_s[1] - 1]
 
     except TypeError:
-        return 0, 0
+        return _netsum
+
+    return _netsum
 
 
 def subnets(addr_s, addr_e, aspath=0):
