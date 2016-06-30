@@ -60,13 +60,13 @@ def prefix_spec(prefix, i):
     return prefixes, i
 
 
-def inprefix_spec(prefix, slice=0):
-    """True if arg1 in PREFIX_SPEC"""
+def inprefix_spec(prefix, sl=0):
+    """Return full special prefix if arg1 in PREFIX_SPEC or arg1"""
 
-    for prefix_spec in PREFIX_SPEC[slice:]:
-        if prefix[0] < prefix_spec[0]:
+    for spec in PREFIX_SPEC[sl:]:
+        if prefix[0] < spec[0]:
             break
-        elif issubnet(prefix_spec, prefix):
-            return prefix_spec
+        elif issubnet(spec, prefix):
+            return spec
 
     return prefix
