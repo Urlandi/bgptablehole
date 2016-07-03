@@ -35,14 +35,14 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
     ipstack = []
     prefix_spec_i = 0
 
-    opt_list = "alspd"
+    opt_list = "alspnd"
     lopt_list = ("all", "hole", "summary", "special", "aspath", "prepend")
 
     input_flow_name = "-"
 
     err_id = 0
 
-    def prefix_out((netin), lp, i, opt_s=False, opt_p=False, opt_a=False):
+    def prefix_out((netin), lp, i, opt_s=False, opt_p=False, opt_n=False):
         for net in netin:
             prefixes, i = prefix_spec(net, i)
             for p in prefixes:
@@ -57,7 +57,7 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
                 if opt_p:
                     sids = ""
 
-                print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", " + p[2] if opt_a else ""))
+                print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", " + str(p[2]) if opt_n else ""))
 
         return i
 
