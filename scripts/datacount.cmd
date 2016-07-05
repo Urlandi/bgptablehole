@@ -16,6 +16,12 @@ echo ASN_SRC, ASN_SUM
 
 CALL :ASN_COUNT %1
 
+echo.
+
+echo Total,ASN_SRC,ASN_UPSTREAM,Total_SUM,ASN_SUM,UPSTREAM_SUM
+
+for /l %%i in (1,1,223) DO CALL :PREFIX24_COUNT %%i %1
+
 GOTO STOP
 
 :PREFIX_COUNT
@@ -130,5 +136,34 @@ FOR /F "usebackq" %%a IN (`cut -f 2 -d '^,' %1_sf1.log  ^| uniq ^| wc -l`) DO (
 )
 
 echo %asn_src%, %asn_sum%
+
+GOTO STOP
+
+:PREFIX24_COUNT
+
+FOR /F "usebackq" %%a IN (`grep -E "^%1\..*/24$|^%1\..*/24[\^, ]" %2_f.log ^| wc -l`) DO (
+ set rf=%%a
+)
+FOR /F "usebackq" %%a IN (`grep -E "^%1\..*/24$|^%1\..*/24[\^, ]" %2_f1.log ^| wc -l`) DO (
+ set rf1=%%a
+)
+FOR /F "usebackq" %%a IN (`grep -E "^%1\..*/24$|^%1\..*/24[\^, ]" %2_f2.log ^| wc -l`) DO (
+ set rf2=%%a
+)
+FOR /F "usebackq" %%a IN (`grep -E "^%1\..*/24$|^%1\..*/24[\^, ]" %2_sf.log ^| wc -l`) DO (
+ set rsf=%%a
+)
+FOR /F "usebackq" %%a IN (`grep -E "^%1\..*/24$|^%1\..*/24[\^, ]" %2_sf1.log ^| wc -l`) DO (
+ set rsf1=%%a
+)
+FOR /F "usebackq" %%a IN (`grep -E "^%1\..*/24$|^%1\..*/24[\^, ]" %2_sf2.log ^| wc -l`) DO (
+ set rsf2=%%a
+)
+
+echo %1/24,%rf%,%rf1%,%rf2%,%rsf%,%rsf1%,%rsf2%
+
+GOTO STOP
+
+
 
 :STOP
