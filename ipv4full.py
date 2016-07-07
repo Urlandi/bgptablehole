@@ -128,8 +128,8 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_special=False, op
         if opt_summary or opt_all:
             # After execute print
             prefix_out(ipstack, "+", prefix_spec_i, opt_special, opt_prepend, opt_aspath)
-    else:
-        exit(err_id)
+
+    return err_id
 
 if __name__ == '__main__':
-    main()
+    exit(main())

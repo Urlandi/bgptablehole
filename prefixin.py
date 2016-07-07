@@ -32,6 +32,9 @@ def prefix_spec(prefix, i):
 
     prefixes = []
 
+    if prefix[2] != 0:
+        i = 0
+
     if prefix != PREFIX_SPEC[i]:
 
         while i < len(PREFIX_SPEC) and prefix[0] > PREFIX_SPEC[i][0]:
@@ -54,6 +57,8 @@ def prefix_spec(prefix, i):
         else:
             prefixes.append(prefix)
 
+        if prefix[2] != 0:
+            i = 0
     else:
         prefixes = [prefix]
 
