@@ -6,7 +6,7 @@ Prefix processing procedures
 from ipv4seq import *
 
 
-def getholes(prefix, (ipstack)):
+def getholes(prefix, (ipstack), opt_g=False):
 
     holes = []
     netunion = []
@@ -14,13 +14,13 @@ def getholes(prefix, (ipstack)):
     while len(ipstack):
         cur_prefix = ipstack.pop()
         sum_prefix = netsum(cur_prefix, prefix)
-        if len(sum_prefix) and prefix[2] == cur_prefix[2] == 0:
+        if len(sum_prefix) and opt_g:
             prefix = (sum_prefix[0], sum_prefix[1], 0,)
             continue
         elif issubnet(cur_prefix, prefix) and prefix[2] == cur_prefix[2]:
             prefix = cur_prefix
             break
-        elif isseq(cur_prefix, prefix) and prefix[2] == cur_prefix[2] == 0:
+        elif isseq(cur_prefix, prefix) and opt_g:
             if prefix[1] <= cur_prefix[1]:
                 netunion.extend(ipstack)
                 netunion.append(cur_prefix)

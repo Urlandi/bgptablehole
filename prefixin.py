@@ -27,13 +27,10 @@ PREFIX_SPEC = (ipv4num("0.0.0.0/8"),
                ipv4num("224.0.0.0/3"),)
 
 
-def prefix_spec(prefix, i):
+def prefix_spec(prefix, i=0):
     """Return list of prefixes from arg1 where PREFIX_SPEC present visibly"""
 
     prefixes = []
-
-    if prefix[2] != 0:
-        i = 0
 
     if prefix != PREFIX_SPEC[i]:
 
@@ -57,8 +54,6 @@ def prefix_spec(prefix, i):
         else:
             prefixes.append(prefix)
 
-        if prefix[2] != 0:
-            i = 0
     else:
         prefixes = [prefix]
 

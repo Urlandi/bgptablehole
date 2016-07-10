@@ -2,13 +2,14 @@
 
 #### Execute
 
-Run as <b>freeIPv4.py</b> \<<i>file with list of IPv4 prefixes</i>\> or <b>freeIPv4.py</b> [-a|l|s] [-p] [-n] [-d] \<file\>
+Run as <b>freeIPv4.py</b> \<<i>file with list of IPv4 prefixes</i>\> or <b>freeIPv4.py</b> [-a|l|s] [-g] [-p] [-n] [-d] \<file\>
 
 Options:
 <pre>
     -a|--all        Show prefixes, holes and special (default, prefer)
     -l|--hole       Only holes
     -s|--summary    Only summary of prefixes
+    -g|--aggregate  Allow aggregate sequences, otherwise only nested prefixes aggregated
     -p|--special    Without special
     -n|--as_path    Show AS_PATH
     -d|--prepend    Without prepend +|-|*, only with -l or -s</pre>
