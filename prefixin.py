@@ -5,7 +5,7 @@ Work with special prefixes
 
 from ipv4seq import ipv4num, issubnet, netsub
 
-PREFIX_MAX = 24
+PREFIX_MAX = 32
 
 # http://www.iana.org./assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml
 PREFIX_SPEC = (ipv4num("0.0.0.0/8"),
