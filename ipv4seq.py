@@ -5,7 +5,7 @@ Utilities for manipulating IP (v4)
 
 
 ADDR_LEN = 32                       # IPv4 max mask
-ASN_MAX = 18446744073709551616L     # ASN 32bit max number
+ADDR_MAX = 0X100000000              # Absolute addresses count 2^32
 
 
 def ipaddrcount(masklen):
@@ -17,28 +17,28 @@ def ipaddrcount(masklen):
 def ipmask(masklen):
     """Return bit mask by mask length"""
 
-    return (1 << ADDR_LEN) - ipaddrcount(masklen)
+    return ADDR_MAX - ipaddrcount(masklen)
 
 
 def ipv4num(address):
     """
     Convert IPv4 address to list
 
-    Arg is string as "A.B.C.D/Y,ASPATH", where
-    A,B,C,D,Y is valid numbers in address
+    Arg is a string "A.B.C.D/Y,ASPATH", where
+    A,B,C,D,Y are valid numbers in address
     "ASPATH" - various string
 
     "ASPATH" with comma may be absent
 
-    Return is list of 3 items:
+    Returns a list of 3 items:
 
     0. digitized IPv4 net
     1. digitized mask length
-    2. as is "ASPATH" or 0 if absent
+    2. AS-IS "ASPATH" or 0 if absent
 
     or empty list if errors occur
 
-    Some exceptions handled
+    Some exceptions are handled
     """
 
     _r = []
@@ -221,7 +221,7 @@ def subnets(addr_s, addr_e, aspath=0):
 
     def prefix_l(s, e):
 
-        l = ADDR_LEN
+        l = ADDR_LEN + 1
 
         addr_count = e - s
 

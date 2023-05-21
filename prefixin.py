@@ -52,7 +52,7 @@ def prefix_spec(prefix, i=0):
         elif issubnet(PREFIX_SPEC[i], prefix):
             prefixes = [PREFIX_SPEC[i]]
         else:
-            prefixes.append(prefix)
+            prefixes = [prefix]
 
     else:
         prefixes = [prefix]
