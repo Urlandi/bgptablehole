@@ -58,7 +58,7 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_aggregate=False, 
                 else:
                     sids = lp
 
-                if not opt_p:
+                if opt_p:
                     sids = ""
 
                 print ("{}{}/{}{}".format(sids, numipv4(p[0]), p[1], ", " + str(p[2]) if opt_n else ""))
