@@ -95,7 +95,7 @@ def numipv4(address):
         return 0
 
 
-def isiple((net_s), (net_e)):
+def isiple(net_s, net_e):
     """
     True if arg1 < arg2
 
@@ -114,7 +114,7 @@ def isiple((net_s), (net_e)):
     return False
 
 
-def isipleq((net_s), (net_e)):
+def isipleq(net_s, net_e):
     """
     True if arg1 <= arg2
 
@@ -133,7 +133,7 @@ def isipleq((net_s), (net_e)):
     return False
 
 
-def isseq((net_s), (net_e)):
+def isseq(net_s, net_e):
     """
     Return True if net in arg2 begin immediately after net in arg1
 
@@ -153,7 +153,7 @@ def isseq((net_s), (net_e)):
     return False
 
 
-def issubnet((net_s), (net_e)):
+def issubnet(net_s, net_e, ignoreas=True):
     """
     Return True if net in arg2 is included in net in arg1
 
@@ -163,6 +163,8 @@ def issubnet((net_s), (net_e)):
     arg1:192.0.2.0/30, arg2:192.0.2.2/31
     arg1:192.0.2.0/30, arg2:192.0.2.0/30
     """
+    if not ignoreas and (net_s[2] != net_e[2]):
+        return False
 
     try:
         if isipleq(net_s, net_e):
@@ -174,7 +176,7 @@ def issubnet((net_s), (net_e)):
     return False
 
 
-def netsum((net_s), (net_e)):
+def netsum(net_s, net_e, ignoreas=True):
     """
     Return new net as sum of net in arg1 with net in arg2
 
@@ -189,14 +191,15 @@ def netsum((net_s), (net_e)):
     """
 
     _netsum = []
-
+    if not ignoreas and (net_s[2] != net_e[2]):
+        return _netsum
     try:
         if isiple(net_s, net_e):
             if (net_s[1] == net_e[1]) and \
                     (net_s[1] > 1) and \
                     (net_s[0] & ipmask(net_s[1] - 1) == (net_s[0])) and \
                     isseq(net_s, net_e):
-                _netsum = [net_s[0], net_s[1] - 1]
+                _netsum = [net_s[0], net_s[1] - 1, net_s[2]]
 
     except TypeError:
         return _netsum
@@ -244,7 +247,7 @@ def subnets(addr_s, addr_e, aspath=0):
     return _subnets
 
 
-def netsub((net_s), (net_list)):
+def netsub(net_s, net_list):
     """
     Return list of subnets in arg1 where subnets in arg2 must be present visibly
 

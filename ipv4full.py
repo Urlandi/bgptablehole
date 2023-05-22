@@ -44,7 +44,7 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_aggregate=False, 
 
     err_id = 0
 
-    def prefix_out((netin), lp, i, a, opt_s=False, opt_p=False, opt_n=False):
+    def prefix_out(netin, lp, i, a, opt_s=False, opt_p=False, opt_n=False):
         for net in netin:
             if net[2] != a:
                 i = 0
@@ -101,7 +101,7 @@ def main(opt_all=False, opt_hole=False, opt_summary=False, opt_aggregate=False, 
             prefix = ipv4num(rline)
 
             if not len(prefix):
-                print "Invalid prefix '{}'".format(rline)
+                print ("Invalid prefix '{}'".format(rline))
                 err_id = 1
                 break
 
